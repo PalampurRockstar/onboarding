@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: student-app-api
+  name: pet-onboarding
 spec:
   selector:
     matchLabels:
-      app: student-app-api
+      app: pet-onboarding
   replicas: 1
   template:
     metadata:
       labels:
-        app: student-app-api
+        app: pet-onboarding
     spec:
       containers:
-        - name: student-app-api
-          image: nirajsonawane/student-app-api:0.0.1-SNAPSHOT
+        - name: pet-onboarding
+          image: us.gcr.io/main-aura-375015/onboarding:v1.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
