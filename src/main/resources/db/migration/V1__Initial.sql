@@ -1,0 +1,10 @@
+create table addresses (id varchar(255) not null, pin varchar(255), street varchar(255), primary key (id));
+create table breeders (id varchar(255) not null, code varchar(255), name varchar(255), location_id varchar(255), primary key (id));
+create table locations (id varchar(255) not null, latitude varchar(255), longitude varchar(255), name varchar(255), address_id varchar(255), primary key (id));
+create table pets (id varchar(255) not null, breed varchar(255), gender varchar(255), image varchar(255), rating integer not null, title varchar(255), type varchar(255), type_code varchar(255), breeder_id varchar(255), location_id varchar(255), price_id varchar(255), primary key (id));
+create table prices (id varchar(255) not null, amount float not null, currency_code varchar(255), primary key (id));
+alter table breeders add constraint breeders_location_id_fk foreign key (location_id) references locations;
+alter table locations add constraint locations_address_id_fk foreign key (address_id) references addresses;
+alter table pets add constraint pets_breeder_id_fk foreign key (breeder_id) references breeders;
+alter table pets add constraint pets_location_id_fk foreign key (location_id) references locations;
+alter table pets add constraint pets_price_id_fk foreign key (price_id) references prices;
