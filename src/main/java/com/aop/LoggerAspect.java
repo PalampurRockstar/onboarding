@@ -2,7 +2,6 @@ package com.aop;
 
 
 
-import com.model.Pet;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -22,9 +21,7 @@ public class LoggerAspect {
     public void logSuperHeroBefore(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         for (Object arg : args) {
-            if (arg instanceof Pet) {
-                log.info("******* Input : {}", (Pet) arg);
-            }
+            log.info("******* Input : {}",  arg);
         }
     }
 

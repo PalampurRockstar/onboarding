@@ -1,11 +1,13 @@
 package com.service.impl;
 
 
-import com.model.Pet;
-import com.repository.PetRepository;
-import com.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.model.rest.SearchCriteria;
+import com.model.table.Pet;
+import com.repository.PetRepository;
+import com.repository.filter.PetSpecification;
+import com.service.PetService;
 
 import java.util.List;
 
@@ -29,6 +31,9 @@ public class PetServiceImpl implements PetService {
     public Pet save(Pet Pet) {
         return repository.save(Pet);
     }
+
+    @Override
+    public List<Pet> search(SearchCriteria criteria) {return repository.findAll(new PetSpecification( criteria));}
 
     @Override
     public Pet update(String id, Pet Pet) {

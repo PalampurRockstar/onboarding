@@ -1,11 +1,12 @@
 package com.controller;
 
 
-import com.model.Pet;
-import com.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.model.rest.SearchCriteria;
+import com.model.table.Pet;
+import com.service.PetService;
 
 import java.util.List;
 
@@ -29,6 +30,11 @@ public class PetController {
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Pet Pet) {
         return ResponseEntity.ok().body(service.save(Pet));
+    }
+
+    @PostMapping("/search")
+    public List<Pet> save(@RequestBody SearchCriteria criteria) {
+        return service.search(criteria);
     }
 
     @PutMapping("/{id}")

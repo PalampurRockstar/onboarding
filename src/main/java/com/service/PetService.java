@@ -1,8 +1,8 @@
 package com.service;
 
 
-
-import com.model.Pet;
+import com.model.rest.SearchCriteria;
+import com.model.table.Pet;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ public interface PetService {
     Pet findById(String id);
 
     Pet save(Pet superHero);
+    List<Pet> search(SearchCriteria criteria);
 
 	Pet update(String id, Pet Pet);
 

@@ -1,10 +1,10 @@
-package com.model;
+package com.model.table;
 
-import com.config.PetIdGenerator;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import com.config.PetIdGenerator;
 
 import javax.persistence.*;
 
@@ -35,7 +35,6 @@ public class Pet {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "price_id", referencedColumnName = "id")
 	private Price price;
-//
 	@JsonManagedReference
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "breeder_id", referencedColumnName = "id")

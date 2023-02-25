@@ -1,4 +1,4 @@
-package com.model;
+package com.model.table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
