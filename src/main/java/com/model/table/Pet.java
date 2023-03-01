@@ -7,6 +7,7 @@ import org.hibernate.annotations.Parameter;
 import com.config.PetIdGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,6 +31,8 @@ public class Pet {
 	private String type;
 	private String image;
 	private String gender;
+	private String description;
+	private String dob;
 	private int rating;
 	@JsonManagedReference
 	@OneToOne(cascade = CascadeType.ALL)
@@ -43,4 +46,18 @@ public class Pet {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
 	private Location location;
+
+	@JsonManagedReference(value="review-pet")
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "pet_id")
+	private List<Review> reviews;
+	@JsonManagedReference(value="document-pet")
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "pet_id")
+	private List<Document> documents;
+
+	@JsonManagedReference(value="image-pet")
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "pet_id")
+	private List<Image> images;
 }

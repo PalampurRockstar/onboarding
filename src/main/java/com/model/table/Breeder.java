@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,12 +22,18 @@ public class Breeder {
 	private String id;
 	public String name;
 	public String code;
+	public Integer rating;
+
 	@JsonBackReference
 	@OneToOne(mappedBy = "breeder")
 	private Pet pet;
-//
 	@JsonManagedReference
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
 	private Location location;
+
+	@JsonManagedReference(value="review-breeder")
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "breeder_id")
+	private List<Review> reviews;
 }
