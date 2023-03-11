@@ -3,6 +3,14 @@ logging:
     org:
       springframework:
         web: DEBUG
+      hibernate:
+        SQL: debug
+        orm:
+          jdbc:
+            bind:   trace
+        type:
+          descriptor:
+            sql: trace
 spring:
   datasource:
     username:  ${SPRING_DATASOURCE_USERNAME:sa}
@@ -12,7 +20,7 @@ spring:
     properties:
       hibernate:
         dialect: ${SPRING_DATASOURCE_DIALECT:org.hibernate.dialect.H2Dialect}
-    show-sql: true
+#    show-sql: true
   h2:
     console:
       enabled: true

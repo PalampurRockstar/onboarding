@@ -24,7 +24,7 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public Pet findById(String id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException ("** Pet not found for id :: " + id));
+        return repository.findById(id).orElseGet(()->null);
     }
 
     @Override

@@ -24,9 +24,11 @@ public class Breeder {
 	public String code;
 	public Integer rating;
 
-	@JsonBackReference
-	@OneToOne(mappedBy = "breeder")
-	private Pet pet;
+	@JsonManagedReference(value="breeder-pet")
+	@OneToMany(mappedBy = "breeder")
+	private List<Pet> pet;
+
+
 	@JsonManagedReference
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "location_id", referencedColumnName = "id")

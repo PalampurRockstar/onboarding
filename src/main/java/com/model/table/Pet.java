@@ -1,5 +1,6 @@
 package com.model.table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -38,9 +39,9 @@ public class Pet {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "price_id", referencedColumnName = "id")
 	private Price price;
-	@JsonManagedReference
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "breeder_id", referencedColumnName = "id")
+	@JsonBackReference(value="breeder-pet")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "breeder_id")
 	private Breeder breeder;
 	@JsonManagedReference(value="to-pet")
 	@OneToOne(cascade = CascadeType.ALL)
