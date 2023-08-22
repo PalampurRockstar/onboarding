@@ -21,11 +21,13 @@ public class Image {
     private String file;
     private String path;
     private String cdn;
-
     @JsonBackReference(value="image-pet")
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "pet_id")
     private Pet pet;
-    @JsonBackReference(value="review-pet")
-    @ManyToOne(fetch=FetchType.EAGER)
-    private Review review;
+
+
+//    @JsonBackReference(value="review-pet")
+//    @ManyToOne(fetch=FetchType.EAGER)
+//    private Review review;
 }

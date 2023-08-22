@@ -1,11 +1,13 @@
 package com.model.table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -24,18 +26,18 @@ public class Breeder {
 	public String code;
 	public Integer rating;
 
-	@JsonManagedReference(value="breeder-pet")
-	@OneToMany(mappedBy = "breeder")
-	private List<Pet> pet;
+	@JsonIgnoreProperties("breeder")
+	@OneToMany(mappedBy = "breeder", orphanRemoval = true, cascade = CascadeType.MERGE)
+	private List<Pet> pets= new ArrayList<>();
 
 
 	@JsonManagedReference
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "location_id", referencedColumnName = "id")
+	@OneToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "location_id")
 	private Location location;
 
-	@JsonManagedReference(value="review-breeder")
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "breeder_id")
-	private List<Review> reviews;
+//	@JsonManagedReference(value="review-breeder")
+//	@OneToMany(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "breeder_id")
+//	private List<Review> reviews;
 }

@@ -1,32 +1,31 @@
 package com.controller;
 
 
-import com.model.rest.SearchCriteria;
+import com.model.table.Address;
 import com.model.table.Location;
-import com.model.table.Pet;
+import com.service.AddressService;
 import com.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 
 
 @RestController
-@RequestMapping("/location")
-public class LocationController {
+@RequestMapping("/address")
+public class AddressController {
     @Autowired
-    private LocationService service;
+    private AddressService address;
 
     @GetMapping
     public ResponseEntity<List<?>> findAll() {
-        return ResponseEntity.ok().body(service.findAll());
+        return ResponseEntity.ok().body(address.findAll());
     }
 
     @PostMapping()
-    public Location save(@RequestBody Location location) {
-        return service.save(location);
+    public Address save(@RequestBody Address location) {
+        return address.save(location);
     }
 
 }

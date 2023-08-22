@@ -1,13 +1,16 @@
 package com.model.table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import com.config.PetIdGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -28,6 +31,7 @@ public class Pet {
 	private String breed;
 	private String title;
 	@Column(name = "type_code")
+	@JsonProperty("type_code")
 	private String typeCode;
 	private String type;
 	private String image;
@@ -39,26 +43,28 @@ public class Pet {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "price_id", referencedColumnName = "id")
 	private Price price;
-	@JsonBackReference(value="breeder-pet")
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "breeder_id")
+	@JsonIgnoreProperties("pets")
 	private Breeder breeder;
 	@JsonManagedReference(value="to-pet")
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
 	private Location location;
 
-	@JsonManagedReference(value="review-pet")
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "pet_id")
-	private List<Review> reviews;
+//	@JsonManagedReference(value="review-pet")
+//	@OneToMany(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "pet_id")
+//	private List<Review> reviews;
+
+
 	@JsonManagedReference(value="document-pet")
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "pet_id")
-	private List<Document> documents;
+	private List<Document> documents=new ArrayList<>();
 
 	@JsonManagedReference(value="image-pet")
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "pet_id")
+	@OneToMany(mappedBy = "pet",cascade = CascadeType.MERGE,  orphanRemoval = true)
+
 	private List<Image> images;
 }

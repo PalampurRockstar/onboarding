@@ -26,13 +26,11 @@ public class Location {
 	@JsonBackReference(value="to-pet")
 	@OneToOne(mappedBy = "location")
 	private Pet pet;
-//
 	@JsonBackReference
-	@OneToOne(mappedBy = "location")
+	@OneToOne(mappedBy = "location" ,cascade = CascadeType.MERGE)
 	private Breeder breeder;
-//
 	@JsonManagedReference
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "address_id", referencedColumnName = "id")
 	private Address address;
 

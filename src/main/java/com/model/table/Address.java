@@ -24,7 +24,7 @@ public class Address {
 
     private String pin;
     @JsonBackReference
-    @OneToOne(mappedBy = "address")
+    @OneToOne(mappedBy = "address",cascade = CascadeType.MERGE)
     private Location location;
 
 }

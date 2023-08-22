@@ -1,13 +1,14 @@
 package com.service;
 
 
+import com.model.table.Address;
 import com.model.table.Location;
 
 import java.util.List;
 
-public interface LocationService {
+public interface AddressService {
 
     List<?> findAll();
-    Location save(Location location);
+    Address save(Address location);
 
 }

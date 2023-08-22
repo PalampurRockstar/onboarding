@@ -24,17 +24,17 @@ public class Review {
     private Integer likeCount;
     private Integer disLikeCount;
 
-    @JsonBackReference(value="review-pet")
-    @ManyToOne(fetch=FetchType.EAGER)
-    private Pet pet;
+//    @JsonBackReference(value="review-pet")
+//    @ManyToOne(fetch=FetchType.EAGER)
+//    private Pet pet;
 
-    @JsonBackReference(value="review-breeder")
-    @ManyToOne(fetch=FetchType.EAGER)
-    private Breeder breeder;
+//    @JsonBackReference(value="review-breeder")
+//    @ManyToOne(fetch=FetchType.EAGER)
+//    private Breeder breeder;
 
-    @JsonManagedReference(value="review-pet")
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "evidence_id")
-    private List<Image> evidence;
+//    @JsonManagedReference(value="review-pet")
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "evidence_id")
+//    private List<Image> evidence;
 
 }
