@@ -25,8 +25,9 @@ public class Review {
     private Integer disLikeCount;
 
 //    @JsonBackReference(value="review-pet")
-//    @ManyToOne(fetch=FetchType.EAGER)
-//    private Pet pet;
+    @ManyToOne(fetch=FetchType.EAGER)
+    private Pet pet;
+
 
 //    @JsonBackReference(value="review-breeder")
 //    @ManyToOne(fetch=FetchType.EAGER)

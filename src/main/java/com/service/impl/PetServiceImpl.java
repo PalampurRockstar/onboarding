@@ -10,7 +10,9 @@ import com.model.table.Pet;
 import com.repository.PetRepository;
 import com.repository.filter.PetSpecification;
 import com.service.PetService;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
@@ -38,18 +40,16 @@ public class PetServiceImpl implements PetService {
         breeder.getPets().add(pet);
         return petRepo.save(pet);
     }
-
     @Override
     public List<Pet> search(SearchCriteria criteria) {
         return petRepo.findAll(new PetSpecification( criteria));
     }
 
     @Override
-    public Pet update(String id, Pet Pet) {
+    public Pet update(String id, Pet pet) {
     	petRepo.findById(id).orElseThrow(() -> new RuntimeException ("** Pet not found for id :: " + id));
-        
-    	Pet.setId(id);
-    	return petRepo.save(Pet);
+    	pet.setId(id);
+    	return petRepo.save(pet);
     }
 
     @Override

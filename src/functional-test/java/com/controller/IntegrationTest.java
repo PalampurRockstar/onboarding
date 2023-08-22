@@ -92,15 +92,15 @@ public class IntegrationTest {
         assertNotNull(actualBreeder.getId());
 
         //when
-        Image expectedImage= createImage();
+        Image expectedImage1= createImage();
 
         //trigger
-        ResponseEntity<Image> responseImage = restTemplate.postForEntity("/image", expectedImage,Image.class);
-        Image actualImage= responseImage.getBody();
+        ResponseEntity<Image> responseImage1 = restTemplate.postForEntity("/image", expectedImage1,Image.class);
+        Image actualImage1= responseImage1.getBody();
 
         //verify
-        assertThat(responseImage.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertNotNull(actualImage.getId());
+        assertThat(responseImage1.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(actualImage1.getId());
 
         //when
         Document expectedDocument= createDocument();
@@ -117,7 +117,8 @@ public class IntegrationTest {
         Pet expectedPet= createPet();
         expectedPet.setBreeder(actualBreeder);
         expectedPet.getDocuments().add(actualDocument);
-        expectedPet.setImages( Collections.singletonList(actualImage));
+        expectedPet.getImages().add(actualImage1);
+        expectedPet.setLocation(actualLocation);
         //trigger
         ResponseEntity<Pet> responsePet = restTemplate.postForEntity("/pet", expectedPet,Pet.class);
         Pet actualPet= responsePet.getBody();
@@ -126,24 +127,65 @@ public class IntegrationTest {
         assertThat(responsePet.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertNotNull(actualPet.getId());
 
+        //when
+        Image expectedImage2= createImage();
+        expectedImage2.setPet(actualPet);
+        //trigger
+        ResponseEntity<Image> responseImage2 = restTemplate.postForEntity("/image", expectedImage2,Image.class);
+        Image actualImage2= responseImage2.getBody();
+
+        //verify
+        assertThat(responseImage2.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(actualImage2.getId());
+
+
+
+        //when
+        Review expectedReview2= createReview();
+        expectedReview2.setPet(actualPet);
+        //trigger
+        ResponseEntity<Review> responseReview2 = restTemplate.postForEntity("/review", expectedReview2,Review.class);
+        Review actualReview2= responseReview2.getBody();
+
+        //verify
+        assertThat(responseReview2.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(actualReview2.getId());
+
     }
 
     private Breeder createBreeder() throws JsonProcessingException {
         return mapper.readValue("{\"name\":\"Sourabh\",\"code\":\"B001\",\"rating\":3}", Breeder.class);
     }
     private Location createLocation() throws JsonProcessingException {
-        return mapper.readValue("{\"name\":\"Chiang mai\",\"longitude\":\"\",\"latitude\":\"\"}", Location.class);
+        return mapper.readValue("{\"name\":\"Chiang mai\",\"longitude\":\"111111\",\"latitude\":\"222222\"}", Location.class);
     }
     private Address createAddress() throws JsonProcessingException {
-        return mapper.readValue("{\"street\":\"\",\"pin\":\"\"}", Address.class);
+        return mapper.readValue("{\"street\":\"Some street\",\"pin\":\"176064\"}", Address.class);
     }
     private Pet createPet() throws JsonProcessingException {
-        return mapper.readValue("{\"breed\":\"lab\",\"title\":\"Bruno\",\"type_code\":\"\",\"type\":\"dog\",\"image\":\"\",\"gender\":\"male\",\"rating\":3,\"dob\":\"2023-01-28T16:44:03.520Z\",\"description\":\"Lorem \"}", Pet.class);
+        return mapper.readValue("{" +
+                "\"breed\": \"Beagle\"," +
+                "\"title\": \"Adorable Silver Chinchilla Persian\"," +
+                "  \"type_code\": \"\"," +
+                "  \"type\": \"cat\"," +
+                "  \"image\": \"\"," +
+                "  \"gender\": \"male\"," +
+                "  \"rating\": 3," +
+                "  \"dob\": \"2023-01-28T16:44:03.520Z\",\n" +
+                "  \"description\":\"Lorem ipsum dolor sit ame\"}", Pet.class);
     }
     private Image createImage() throws JsonProcessingException {
-        return mapper.readValue("{\"path\":\"some/path\",\"file\":\"image1.jpg\",\"cdn\":\"host1\"}", Image.class);
+        return mapper.readValue("{\"path\":\"some path\",\"file\":\"image1.jpg\",\"cdn\":\"host1\"}", Image.class);
     }
     private Document createDocument() throws JsonProcessingException {
         return mapper.readValue("{\"name\":\"Vaccination certificate\",\"validUntil\":\"2023-01-28T16:44:03.520Z\",\"documentNumber\":\"34343\"}", Document.class);
+    }
+
+    private Review createReview() throws JsonProcessingException {
+        return mapper.readValue("{\n" +
+                "    \"comment\": \"Breeder has good experience\",\n" +
+                "    \"likeCount\": 2,\n" +
+                "    \"disLikeCount\": 3\n" +
+                "}", Review.class);
     }
 }

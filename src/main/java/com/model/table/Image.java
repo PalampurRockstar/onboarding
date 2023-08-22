@@ -21,9 +21,7 @@ public class Image {
     private String file;
     private String path;
     private String cdn;
-    @JsonBackReference(value="image-pet")
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "pet_id")
+    @ManyToOne(fetch=FetchType.EAGER)
     private Pet pet;
 
 

@@ -48,14 +48,14 @@ public class Pet {
 	@JsonIgnoreProperties("pets")
 	private Breeder breeder;
 	@JsonManagedReference(value="to-pet")
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
 	private Location location;
 
 //	@JsonManagedReference(value="review-pet")
-//	@OneToMany(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "pet_id")
-//	private List<Review> reviews;
+	@OneToMany(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "pet_id")
+	private List<Review> reviews=new ArrayList<>();
 
 
 	@JsonManagedReference(value="document-pet")
@@ -63,8 +63,7 @@ public class Pet {
 	@JoinColumn(name = "pet_id")
 	private List<Document> documents=new ArrayList<>();
 
-	@JsonManagedReference(value="image-pet")
-	@OneToMany(mappedBy = "pet",cascade = CascadeType.MERGE,  orphanRemoval = true)
-
-	private List<Image> images;
+	@OneToMany(cascade = {CascadeType.MERGE})
+	@JoinColumn(name = "pet_id")
+	private List<Image> images= new ArrayList<>();;
 }

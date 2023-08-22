@@ -1,11 +1,9 @@
 package com.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.model.rest.SearchCriteria;
 import com.model.table.Image;
-import com.service.ImageService;
+import com.model.table.Review;
+import com.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +12,10 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/image")
-public class ImageController {
+@RequestMapping("/review")
+public class ReviewController {
     @Autowired
-    private ImageService service;
+    private ReviewService service;
 
     @GetMapping
     public ResponseEntity<List<?>> findAll() {
@@ -30,13 +28,13 @@ public class ImageController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Image image) {
-        return ResponseEntity.ok().body(service.save(image));
+    public ResponseEntity<?> save(@RequestBody Review review) {
+        return ResponseEntity.ok().body(service.save(review));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Image Image) {
-        return ResponseEntity.ok().body(service.update(id, Image));
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Review review) {
+        return ResponseEntity.ok().body(service.update(id, review));
     }
 
     @DeleteMapping("/{id}")
