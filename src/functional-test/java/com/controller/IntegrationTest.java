@@ -95,9 +95,20 @@ public class IntegrationTest {
         assertNotNull(actualBreeder.getId());
 
         //when
+        Price expectedPrice= createPrice();
+
+        ResponseEntity<Price> responsePrice = restTemplate.postForEntity("/price", expectedPrice,Price.class);
+        Price actualPrice= responsePrice.getBody();
+
+        //verify
+        assertThat(responsePrice.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(actualPrice.getId());
+
+        //when
         Pet expectedPet= createPet();
         expectedPet.setBreeder(actualBreeder);
         expectedPet.setLocation(actualLocation);
+        expectedPet.setPrice(actualPrice);
 
         ResponseEntity<Pet> responsePet = restTemplate.postForEntity("/pet", expectedPet,Pet.class);
         Pet actualPet= responsePet.getBody();
@@ -202,5 +213,11 @@ public class IntegrationTest {
                 "    \"likeCount\": 2,\n" +
                 "    \"disLikeCount\": 3\n" +
                 "}", Review.class);
+    }
+    private Price createPrice() throws JsonProcessingException {
+        return mapper.readValue("{\n" +
+                "  \"amount\": 3.55,\n" +
+                "  \"currencyCode\": \"INR\"\n" +
+                "}", Price.class);
     }
 }

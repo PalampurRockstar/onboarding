@@ -38,7 +38,7 @@ public class Pet {
 	private String dob;
 	private int rating;
 	@JsonManagedReference
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "price_id", referencedColumnName = "id")
 	private Price price;
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -50,7 +50,6 @@ public class Pet {
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
 	private Location location;
 
-//	@JsonBackReference(value="review-pet")
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.MERGE,fetch =FetchType.LAZY )
 	@JoinColumn(name = "pet_id")
