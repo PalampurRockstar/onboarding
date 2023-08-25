@@ -1,9 +1,6 @@
 package com.model.table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -20,6 +17,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "pets")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Pet {
 	@Id
 	@GeneratedValue(generator = PetIdGenerator.GENERATOR_NAME)
@@ -52,18 +50,19 @@ public class Pet {
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
 	private Location location;
 
-//	@JsonManagedReference(value="review-pet")
-	@OneToMany(cascade = CascadeType.MERGE)
+//	@JsonBackReference(value="review-pet")
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.MERGE,fetch =FetchType.LAZY )
 	@JoinColumn(name = "pet_id")
 	private List<Review> reviews=new ArrayList<>();
 
-
-	@JsonManagedReference(value="document-pet")
-	@OneToMany(cascade = CascadeType.MERGE)
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.MERGE,fetch=FetchType.LAZY)
 	@JoinColumn(name = "pet_id")
 	private List<Document> documents=new ArrayList<>();
 
-	@OneToMany(cascade = {CascadeType.MERGE})
+	@JsonIgnore
+	@OneToMany(cascade = {CascadeType.MERGE},fetch=FetchType.LAZY)
 	@JoinColumn(name = "pet_id")
-	private List<Image> images= new ArrayList<>();;
+	private List<Image> images= new ArrayList<>();
 }

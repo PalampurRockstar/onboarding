@@ -4,6 +4,7 @@ import com.AppStart;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.model.table.*;
+import lombok.var;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySource;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static graphql.Assert.assertNotNull;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,23 +38,23 @@ public class IntegrationTest {
     @Autowired
     private ConfigurableApplicationContext context;
 
-    @BeforeEach
-    public void before() {
-        ConfigurableEnvironment environment = context.getEnvironment();
-        String[] activeProfiles = environment.getActiveProfiles();
-        System.out.println("Active Profiles: " + String.join(", ", activeProfiles));
-        System.out.println("Properties from application.yml:");
-        for (PropertySource<?> propertySource : environment.getPropertySources()) {
-                if (propertySource instanceof org.springframework.core.env.EnumerablePropertySource) {
-                    org.springframework.core.env.EnumerablePropertySource<?> enumerablePropertySource =
-                            (org.springframework.core.env.EnumerablePropertySource<?>) propertySource;
-                    for (String propertyName : enumerablePropertySource.getPropertyNames()) {
-                        Object propertyValue = enumerablePropertySource.getProperty(propertyName);
-                        System.out.println("  " + propertyName + ": " + propertyValue);
-                    }
-                }
-        }
-    }
+//    @BeforeEach
+//    public void before() {
+//        ConfigurableEnvironment environment = context.getEnvironment();
+//        String[] activeProfiles = environment.getActiveProfiles();
+//        System.out.println("Active Profiles: " + String.join(", ", activeProfiles));
+//        System.out.println("Properties from application.yml:");
+//        for (PropertySource<?> propertySource : environment.getPropertySources()) {
+//                if (propertySource instanceof org.springframework.core.env.EnumerablePropertySource) {
+//                    org.springframework.core.env.EnumerablePropertySource<?> enumerablePropertySource =
+//                            (org.springframework.core.env.EnumerablePropertySource<?>) propertySource;
+//                    for (String propertyName : enumerablePropertySource.getPropertyNames()) {
+//                        Object propertyValue = enumerablePropertySource.getProperty(propertyName);
+//                        System.out.println("  " + propertyName + ": " + propertyValue);
+//                    }
+//                }
+//        }
+//    }
 
     @Test
     public void shouldTestIntegration() throws JsonProcessingException {
@@ -92,7 +95,16 @@ public class IntegrationTest {
         assertNotNull(actualBreeder.getId());
 
         //when
+        Pet expectedPet= createPet();
+        expectedPet.setBreeder(actualBreeder);
+        expectedPet.setLocation(actualLocation);
+
+        ResponseEntity<Pet> responsePet = restTemplate.postForEntity("/pet", expectedPet,Pet.class);
+        Pet actualPet= responsePet.getBody();
+
+        //when
         Image expectedImage1= createImage();
+        expectedImage1.setPet(actualPet);
 
         //trigger
         ResponseEntity<Image> responseImage1 = restTemplate.postForEntity("/image", expectedImage1,Image.class);
@@ -102,8 +114,13 @@ public class IntegrationTest {
         assertThat(responseImage1.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertNotNull(actualImage1.getId());
 
+        //verify
+        assertThat(responsePet.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(actualPet.getId());
+
         //when
         Document expectedDocument= createDocument();
+        expectedDocument.setPet(actualPet);
 
         //trigger
         ResponseEntity<Document> responseDocument = restTemplate.postForEntity("/document", expectedDocument,Document.class);
@@ -114,42 +131,40 @@ public class IntegrationTest {
         assertNotNull(actualDocument.getId());
 
         //when
-        Pet expectedPet= createPet();
-        expectedPet.setBreeder(actualBreeder);
-        expectedPet.getDocuments().add(actualDocument);
-        expectedPet.getImages().add(actualImage1);
-        expectedPet.setLocation(actualLocation);
+        Review expectedReview1= createReview();
+        expectedReview1.setPet(actualPet);
+        System.out.println("Review1 : "+mapper.writeValueAsString(expectedReview1));
         //trigger
-        ResponseEntity<Pet> responsePet = restTemplate.postForEntity("/pet", expectedPet,Pet.class);
-        Pet actualPet= responsePet.getBody();
+        ResponseEntity<Review> responseReview1 = restTemplate.postForEntity("/review", expectedReview1,Review.class);
+        Review actualReview1= responseReview1.getBody();
 
         //verify
-        assertThat(responsePet.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertNotNull(actualPet.getId());
+        assertThat(responseReview1.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(actualReview1.getId());
 
         //when
-        Image expectedImage2= createImage();
-        expectedImage2.setPet(actualPet);
-        //trigger
-        ResponseEntity<Image> responseImage2 = restTemplate.postForEntity("/image", expectedImage2,Image.class);
-        Image actualImage2= responseImage2.getBody();
+        ResponseEntity<Pet> petResponse = restTemplate.getForEntity("/pet/"+actualPet.getId(), Pet.class);
+        Pet getPet= petResponse.getBody();
+
 
         //verify
-        assertThat(responseImage2.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertNotNull(actualImage2.getId());
-
-
+        assertThat(petResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(getPet.getId());
 
         //when
-        Review expectedReview2= createReview();
-        expectedReview2.setPet(actualPet);
-        //trigger
-        ResponseEntity<Review> responseReview2 = restTemplate.postForEntity("/review", expectedReview2,Review.class);
-        Review actualReview2= responseReview2.getBody();
+        ResponseEntity<Review> reviewResponse = restTemplate.getForEntity("/review/"+actualReview1.getId(), Review.class);
+        Review getReview= reviewResponse.getBody();
+        assertThat(getReview.getPet().getId()).isEqualTo(getPet.getId());
 
-        //verify
-        assertThat(responseReview2.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertNotNull(actualReview2.getId());
+        //when
+        ResponseEntity<Document> documentResponse = restTemplate.getForEntity("/document/"+actualDocument.getId(), Document.class);
+        Document getDocument= documentResponse.getBody();
+        assertThat(getDocument.getPet().getId()).isEqualTo(getPet.getId());
+
+        //when
+        ResponseEntity<Image> imageResponse = restTemplate.getForEntity("/image/"+actualImage1.getId(), Image.class);
+        Image getImage= imageResponse.getBody();
+        assertThat(getImage.getPet().getId()).isEqualTo(getPet.getId());
 
     }
 

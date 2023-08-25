@@ -1,6 +1,7 @@
 package com.model.table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -24,7 +25,8 @@ public class Review {
     private Integer likeCount;
     private Integer disLikeCount;
 
-//    @JsonBackReference(value="review-pet")
+
+//    @JsonManagedReference(value="review-pet")
     @ManyToOne(fetch=FetchType.EAGER)
     private Pet pet;
 

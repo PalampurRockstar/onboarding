@@ -17,6 +17,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name="breeders")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Breeder {
 
 	@Id @GeneratedValue(generator="system-uuid")
@@ -27,12 +28,12 @@ public class Breeder {
 	public Integer rating;
 
 	@JsonIgnoreProperties("breeder")
-	@OneToMany(mappedBy = "breeder", orphanRemoval = true, cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "breeder", orphanRemoval = true, cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
 	private List<Pet> pets= new ArrayList<>();
 
 
 	@JsonManagedReference
-	@OneToOne(cascade = CascadeType.MERGE)
+	@OneToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
 	@JoinColumn(name = "location_id")
 	private Location location;
 
