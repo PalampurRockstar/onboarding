@@ -1,6 +1,7 @@
 package com.model.table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -21,11 +22,11 @@ public class Image {
     private String file;
     private String path;
     private String cdn;
-
-    @JsonBackReference(value="image-pet")
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     private Pet pet;
-    @JsonBackReference(value="review-pet")
-    @ManyToOne(fetch=FetchType.EAGER)
-    private Review review;
+
+
+//    @JsonBackReference(value="review-pet")
+//    @ManyToOne(fetch=FetchType.EAGER)
+//    private Review review;
 }

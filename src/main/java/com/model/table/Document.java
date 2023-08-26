@@ -24,7 +24,6 @@ public class Document {
     @Column(name = "valid_until")
     private String validUntil;
 
-    @JsonBackReference(value="document-pet")
     @ManyToOne(fetch=FetchType.EAGER)
     private Pet pet;
 }

@@ -1,6 +1,7 @@
 package com.model.table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -24,17 +25,18 @@ public class Review {
     private Integer likeCount;
     private Integer disLikeCount;
 
-    @JsonBackReference(value="review-pet")
-    @ManyToOne(fetch=FetchType.EAGER)
+
+//    @JsonManagedReference(value="review-pet")
+    @ManyToOne(fetch=FetchType.EAGER,optional = true)
     private Pet pet;
 
-    @JsonBackReference(value="review-breeder")
-    @ManyToOne(fetch=FetchType.EAGER)
+
+    @ManyToOne(fetch=FetchType.EAGER,optional = true)
     private Breeder breeder;
 
-    @JsonManagedReference(value="review-pet")
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "evidence_id")
-    private List<Image> evidence;
+//    @JsonManagedReference(value="review-pet")
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "evidence_id")
+//    private List<Image> evidence;
 
 }
