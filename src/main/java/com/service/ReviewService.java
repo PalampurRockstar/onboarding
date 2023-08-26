@@ -7,14 +7,16 @@ import java.util.List;
 
 public interface ReviewService {
 
-    List<?> findAll();
+    public List<?> findAll();
 
-    Review findById(String id);
+    public Review findById(String id);
 
-    Review save(Review Review);
+    public List<Review> findByPetId(String id);
 
-	Review update(String id, Review Review);
+    public Review save(Review Review);
 
-    void delete(String id);
+    public Review update(String id, Review Review);
+
+    public void delete(String id);
 
 }

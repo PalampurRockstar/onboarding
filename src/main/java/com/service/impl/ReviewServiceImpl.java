@@ -25,7 +25,9 @@ public class ReviewServiceImpl implements ReviewService {
     public List<Review> findAll() {
         return reviewRepo.findAll();
     }
-
+    public List<Review> findByPetId(String id){
+        return reviewRepo.findByPetId(id);
+    }
     @Override
     public Review findById(String id) {
         return reviewRepo.findById(id).orElseThrow(() -> new RuntimeException ("** Review not found for id :: " + id));

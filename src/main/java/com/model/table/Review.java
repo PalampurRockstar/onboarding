@@ -27,13 +27,12 @@ public class Review {
 
 
 //    @JsonManagedReference(value="review-pet")
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.EAGER,optional = true)
     private Pet pet;
 
 
-//    @JsonBackReference(value="review-breeder")
-//    @ManyToOne(fetch=FetchType.EAGER)
-//    private Breeder breeder;
+    @ManyToOne(fetch=FetchType.EAGER,optional = true)
+    private Breeder breeder;
 
 //    @JsonManagedReference(value="review-pet")
 //    @OneToMany(cascade = CascadeType.ALL)

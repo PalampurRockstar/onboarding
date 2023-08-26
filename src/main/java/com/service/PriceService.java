@@ -7,14 +7,15 @@ import java.util.List;
 
 public interface PriceService {
 
-    List<?> findAll();
+    public List<?> findAll();
 
-    Price findById(String id);
+    public Price findById(String id);
+    public List<Price> findByPetId(String id);
 
-    Price save(Price image);
+    public Price save(Price image);
 
-	Price update(String id, Price image);
+    public Price update(String id, Price image);
 
-    void delete(String id);
+    public void delete(String id);
 
 }

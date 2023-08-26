@@ -19,11 +19,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySource;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.*;
 
 import static graphql.Assert.assertNotNull;
+import static graphql.Assert.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = AppStart.class)
@@ -142,30 +142,46 @@ public class IntegrationTest {
         assertNotNull(actualDocument.getId());
 
         //when
-        Review expectedReview1= createReview();
+        Review expectedReview1= createReview("Comment for expectedReview1");
         expectedReview1.setPet(actualPet);
-        System.out.println("Review1 : "+mapper.writeValueAsString(expectedReview1));
+
         //trigger
         ResponseEntity<Review> responseReview1 = restTemplate.postForEntity("/review", expectedReview1,Review.class);
         Review actualReview1= responseReview1.getBody();
-
         //verify
         assertThat(responseReview1.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertNotNull(actualReview1.getId());
 
         //when
+        Review expectedReview2= createReview("Comment for expectedReview2");
+        expectedReview2.setBreeder(actualBreeder);
+
+
+        //trigger
+        ResponseEntity<Review> responseReview2 = restTemplate.postForEntity("/review", expectedReview2,Review.class);
+        Review actualReview2= responseReview2.getBody();
+
+        //verify
+        assertThat(responseReview2.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actualReview2.getId());
+
+        //when
         ResponseEntity<Pet> petResponse = restTemplate.getForEntity("/pet/"+actualPet.getId(), Pet.class);
         Pet getPet= petResponse.getBody();
-
 
         //verify
         assertThat(petResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertNotNull(getPet.getId());
 
         //when
-        ResponseEntity<Review> reviewResponse = restTemplate.getForEntity("/review/"+actualReview1.getId(), Review.class);
-        Review getReview= reviewResponse.getBody();
-        assertThat(getReview.getPet().getId()).isEqualTo(getPet.getId());
+        ResponseEntity<Review> reviewResponse2 = restTemplate.getForEntity("/review/"+actualReview2.getId(), Review.class);
+        Review getReview2= reviewResponse2.getBody();
+        assertThat(getReview2.getBreeder().getId()).isEqualTo(actualBreeder.getId());
+
+        //when
+        ResponseEntity<Review> reviewResponse1 = restTemplate.getForEntity("/review/"+actualReview1.getId(), Review.class);
+        Review getReview1= reviewResponse1.getBody();
+        assertThat(getReview1.getPet().getId()).isEqualTo(getPet.getId());
 
         //when
         ResponseEntity<Document> documentResponse = restTemplate.getForEntity("/document/"+actualDocument.getId(), Document.class);
@@ -176,6 +192,11 @@ public class IntegrationTest {
         ResponseEntity<Image> imageResponse = restTemplate.getForEntity("/image/"+actualImage1.getId(), Image.class);
         Image getImage= imageResponse.getBody();
         assertThat(getImage.getPet().getId()).isEqualTo(getPet.getId());
+
+        ResponseEntity<Review[]> reviewListResponse = restTemplate.getForEntity("/pet/"+actualPet.getId()+"/review", Review[].class);
+        Review[] reviewList= reviewListResponse.getBody();
+        assertThat(reviewList.length).isEqualTo(1);
+        assertTrue(reviewList[0].getId().equals(actualReview1.getId())); 
 
     }
 
@@ -207,9 +228,9 @@ public class IntegrationTest {
         return mapper.readValue("{\"name\":\"Vaccination certificate\",\"validUntil\":\"2023-01-28T16:44:03.520Z\",\"documentNumber\":\"34343\"}", Document.class);
     }
 
-    private Review createReview() throws JsonProcessingException {
+    private Review createReview(String comment) throws JsonProcessingException {
         return mapper.readValue("{\n" +
-                "    \"comment\": \"Breeder has good experience\",\n" +
+                "    \"comment\": \""+comment+"\",\n" +
                 "    \"likeCount\": 2,\n" +
                 "    \"disLikeCount\": 3\n" +
                 "}", Review.class);

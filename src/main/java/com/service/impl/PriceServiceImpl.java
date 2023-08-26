@@ -24,6 +24,9 @@ public class PriceServiceImpl implements PriceService {
     public List<Price> findAll() {
         return priceRepo.findAll();
     }
+    public List<Price> findByPetId(String id){
+        return priceRepo.findByPetId(id);
+    }
 
     @Override
     public Price findById(String id) {

@@ -1,6 +1,7 @@
 package com.model.table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
@@ -37,8 +38,8 @@ public class Breeder {
 	@JoinColumn(name = "location_id")
 	private Location location;
 
-//	@JsonManagedReference(value="review-breeder")
-//	@OneToMany(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "breeder_id")
-//	private List<Review> reviews;
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.MERGE,fetch =FetchType.LAZY )
+	@JoinColumn(name = "breeder_id")
+	private List<Review> reviews;
 }
