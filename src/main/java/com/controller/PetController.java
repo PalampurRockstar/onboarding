@@ -25,6 +25,9 @@ public class PetController {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private BreederService breederService;
+
     @GetMapping
     public ResponseEntity<List<?>> findAll() {
         return ResponseEntity.ok().body(petService.findAll());
@@ -47,6 +50,11 @@ public class PetController {
     @GetMapping("/{petId}/image")
     public ResponseEntity<?> findImageByPetId(@PathVariable String petId) {
         return ResponseEntity.ok().body(imageService.findByPetId(petId));
+    }
+
+    @GetMapping("/{petId}/breeder")
+    public ResponseEntity<?> findBreederByPetId(@PathVariable String petId) {
+        return ResponseEntity.ok().body(breederService.findByPetId(petId));
     }
 
     @PostMapping

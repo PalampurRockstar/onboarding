@@ -4,20 +4,21 @@ package com.service;
 import com.model.rest.SearchCriteria;
 import com.model.table.Breeder;
 import com.model.table.Breeder;
+import com.model.table.Image;
 
 import java.util.List;
 
 public interface BreederService {
 
-    List<?> findAll();
+    public List<Breeder> findAll();
 
-    Breeder findById(String id);
+    public Breeder findById(String id);
 
-    Breeder save(Breeder superHero);
+    public Breeder save(Breeder superHero);
 
+    public Breeder update(String id, Breeder Breeder);
 
-	Breeder update(String id, Breeder Breeder);
-
-    void delete(String id);
+    public void delete(String id);
+    public Breeder findByPetId(String id);
 
 }

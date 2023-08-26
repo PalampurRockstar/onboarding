@@ -209,6 +209,11 @@ public class IntegrationTest {
         assertThat(imageList.length).isEqualTo(1);
         assertTrue(imageList[0].getId().equals(actualImage1.getId()));
 
+        ResponseEntity<Breeder> breederListResponse = restTemplate.getForEntity("/pet/"+actualPet.getId()+"/breeder", Breeder.class);
+        Breeder breederList= breederListResponse.getBody();
+        assertNotNull(breederList);
+        assertTrue(breederList.getId().equals(actualBreeder.getId()));
+
     }
 
     private Breeder createBreeder() throws JsonProcessingException {

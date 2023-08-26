@@ -3,6 +3,7 @@ package com.service.impl;
 
 
 import com.model.table.Breeder;
+import com.model.table.Image;
 import com.repository.BreederRepository;
 import com.service.BreederService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class BreederServiceImpl implements BreederService {
         return repository.findById(id).orElseThrow(() -> new RuntimeException ("** Breeder not found for id :: " + id));
     }
 
+    public Breeder findByPetId(String id){
+        return repository.findPetId(id);
+    }
     @Override
     public Breeder save(Breeder Breeder) {
         return repository.save(Breeder);
