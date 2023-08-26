@@ -37,7 +37,9 @@ public class ImageServiceImpl implements ImageService {
     public Image findById(String id) {
         return imageRepo.findById(id).orElseThrow(() -> new RuntimeException ("** Image not found for id :: " + id));
     }
-
+    public List<Image> findByPetId(String id){
+        return imageRepo.findByPetId(id);
+    }
     @Override
     public Image save(Image image){
         var createdimage=imageRepo.save(image);

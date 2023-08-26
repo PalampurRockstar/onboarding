@@ -1,9 +1,7 @@
 package com.controller;
 
 
-import com.service.PriceService;
-import com.service.PetService;
-import com.service.ReviewService;
+import com.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +19,11 @@ public class PetController {
     private PetService petService;
     @Autowired
     private ReviewService reviewService;
+    @Autowired
+    private DocumentService documentService;
+
+    @Autowired
+    private ImageService imageService;
 
     @GetMapping
     public ResponseEntity<List<?>> findAll() {
@@ -34,6 +37,16 @@ public class PetController {
     @GetMapping("/{petId}/review")
     public ResponseEntity<?> findReviewByPetId(@PathVariable String petId) {
         return ResponseEntity.ok().body(reviewService.findByPetId(petId));
+    }
+
+    @GetMapping("/{petId}/document")
+    public ResponseEntity<?> findDocumentByPetId(@PathVariable String petId) {
+        return ResponseEntity.ok().body(documentService.findByPetId(petId));
+    }
+
+    @GetMapping("/{petId}/image")
+    public ResponseEntity<?> findImageByPetId(@PathVariable String petId) {
+        return ResponseEntity.ok().body(imageService.findByPetId(petId));
     }
 
     @PostMapping

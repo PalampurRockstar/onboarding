@@ -13,31 +13,36 @@ import java.util.List;
 public class DocumentServiceImpl implements DocumentService {
 
     @Autowired
-    private DocumentRepository imageRepo;
+    private DocumentRepository documentRepo;
     @Override
     public List<Document> findAll() {
-        return imageRepo.findAll();
+        return documentRepo.findAll();
     }
 
     @Override
     public Document findById(String id) {
-        return imageRepo.findById(id).orElseThrow(() -> new RuntimeException ("** Document not found for id :: " + id));
+        return documentRepo.findById(id).orElseThrow(() -> new RuntimeException ("** Document not found for id :: " + id));
     }
 
     @Override
     public Document save(Document pet) {
-        return imageRepo.save(pet);
+        return documentRepo.save(pet);
+    }
+
+    @Override
+    public List<Document> findByPetId(String id){
+        return documentRepo.findByPetId(id);
     }
 
     @Override
     public Document update(String id, Document Document) {
-    	imageRepo.findById(id).orElseThrow(() -> new RuntimeException ("** Document not found for id :: " + id));
+    	documentRepo.findById(id).orElseThrow(() -> new RuntimeException ("** Document not found for id :: " + id));
     	Document.setId(id);
-    	return imageRepo.save(Document);
+    	return documentRepo.save(Document);
     }
 
     @Override
     public void delete(String id) {
-        imageRepo.findById(id).ifPresent(Document -> imageRepo.delete(Document));
+        documentRepo.findById(id).ifPresent(Document -> documentRepo.delete(Document));
     }
 }

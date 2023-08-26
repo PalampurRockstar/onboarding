@@ -196,7 +196,18 @@ public class IntegrationTest {
         ResponseEntity<Review[]> reviewListResponse = restTemplate.getForEntity("/pet/"+actualPet.getId()+"/review", Review[].class);
         Review[] reviewList= reviewListResponse.getBody();
         assertThat(reviewList.length).isEqualTo(1);
-        assertTrue(reviewList[0].getId().equals(actualReview1.getId())); 
+        assertTrue(reviewList[0].getId().equals(actualReview1.getId()));
+
+
+        ResponseEntity<Document[]> documentListResponse = restTemplate.getForEntity("/pet/"+actualPet.getId()+"/document", Document[].class);
+        Document[] documentList= documentListResponse.getBody();
+        assertThat(documentList.length).isEqualTo(1);
+        assertTrue(documentList[0].getId().equals(actualDocument.getId()));
+
+        ResponseEntity<Image[]> imageListResponse = restTemplate.getForEntity("/pet/"+actualPet.getId()+"/image", Image[].class);
+        Image[] imageList= imageListResponse.getBody();
+        assertThat(imageList.length).isEqualTo(1);
+        assertTrue(imageList[0].getId().equals(actualImage1.getId()));
 
     }
 
