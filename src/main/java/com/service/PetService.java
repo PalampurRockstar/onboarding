@@ -1,6 +1,7 @@
 package com.service;
 
 
+import com.model.dto.PetDto;
 import com.model.rest.SearchCriteria;
 import com.model.table.Pet;
 
@@ -10,7 +11,7 @@ public interface PetService {
 
     List<?> findAll();
 
-    Pet findById(String id);
+    PetDto findById(String id);
 
     Pet save(Pet superHero);
     List<Pet> search(SearchCriteria criteria);

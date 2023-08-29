@@ -2,7 +2,9 @@ package com.controller;
 
 import com.AppStart;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.model.dto.PetDto;
 import com.model.table.*;
 import lombok.var;
 import org.aspectj.lang.annotation.Before;
@@ -22,6 +24,7 @@ import org.springframework.core.env.PropertySource;
 
 import java.util.*;
 
+import static com.model.mapper.PetMapper.petMapperInstance;
 import static graphql.Assert.assertNotNull;
 import static graphql.Assert.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -116,6 +119,7 @@ public class IntegrationTest {
         //when
         Image expectedImage1= createImage();
         expectedImage1.setPet(actualPet);
+        expectedImage1.setIsProfilePicture(true);
 
         //trigger
         ResponseEntity<Image> responseImage1 = restTemplate.postForEntity("/image", expectedImage1,Image.class);
@@ -166,12 +170,14 @@ public class IntegrationTest {
         assertThat(actualReview2.getId());
 
         //when
-        ResponseEntity<Pet> petResponse = restTemplate.getForEntity("/pet/"+actualPet.getId(), Pet.class);
-        Pet getPet= petResponse.getBody();
+        ResponseEntity<PetDto> petResponse = restTemplate.getForEntity("/pet/"+actualPet.getId(), PetDto.class);
+        PetDto getPetDto= petResponse.getBody();
+        Pet getPet= petMapperInstance.petDtoToPet(getPetDto);
 
         //verify
         assertThat(petResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertNotNull(getPet.getId());
+        assertThat(getPetDto.getProfilePicture().getId()).isEqualTo(actualImage1.getId());
 
         //when
         ResponseEntity<Review> reviewResponse2 = restTemplate.getForEntity("/review/"+actualReview2.getId(), Review.class);

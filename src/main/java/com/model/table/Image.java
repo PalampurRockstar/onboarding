@@ -22,6 +22,7 @@ public class Image {
     private String file;
     private String path;
     private String cdn;
+    private Boolean isProfilePicture;
     @ManyToOne(fetch=FetchType.LAZY)
     private Pet pet;
 
