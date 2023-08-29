@@ -1,5 +1,6 @@
 package com.repository;
 
+import com.model.dto.PetDto;
 import com.model.table.Pet;
 import com.service.impl.PetServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +51,7 @@ class PetRepositoryTest {
         when(petRepository.findById("123")).thenReturn(Optional.of(new Pet()));
 
         // Test
-        Pet pet = petService.findById("123");
+        PetDto pet = petService.findById("123");
 
         // Verify
         assertEquals("123", pet.getId());

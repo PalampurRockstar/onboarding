@@ -1,8 +1,13 @@
 package com.service.impl;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.model.dto.PetDto;
 import com.model.table.Breeder;
 import com.repository.BreederRepository;
+import com.repository.ImageRepository;
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.model.rest.SearchCriteria;
@@ -16,6 +21,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
+import static com.model.mapper.PetMapper.petMapperInstance;
+
 @Service
 public class PetServiceImpl implements PetService {
 
@@ -24,14 +31,23 @@ public class PetServiceImpl implements PetService {
     @Autowired
     private BreederRepository breederRepo;
 
+    @Autowired
+    private ImageRepository imageRepo;
+
     @Override
     public List<Pet> findAll() {
         return petRepo.findAll();
     }
 
     @Override
-    public Pet findById(String id) {
-        return petRepo.findById(id).orElseThrow(() -> new RuntimeException ("** Pet not found for id :: " + id));
+    public PetDto findById(String id) {
+        return petRepo.findById(id)
+                .map(petMapperInstance::petToPetDto)
+                .map(p->{
+                    imageRepo.findDPImageHavingPetId(p.getId()).ifPresent(p::setProfilePicture);
+                    return p;
+                })
+                .orElseThrow(() -> new RuntimeException ("** Pet not found for id :: " + id));
     }
 
     @Override
