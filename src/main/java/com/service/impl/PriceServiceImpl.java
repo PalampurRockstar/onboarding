@@ -37,13 +37,10 @@ public class PriceServiceImpl implements PriceService {
     public Price save(Price image){
         var createdimage=priceRepo.save(image);
         Optional
-                .ofNullable(image)
+                .of(image)
                 .map(Price::getPet)
-                .map(Pet::getId)
-                .ifPresent((id)->petRepo
-                        .findById(id)
-                        .ifPresent(petRepo::save)
-                );
+                .map(Pet::getId).flatMap(id -> petRepo
+                        .findById(id)).ifPresent(petRepo::save);
 
         return createdimage;
     }

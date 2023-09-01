@@ -31,10 +31,4 @@ public class PetDto {
     private List<Review> reviews=new ArrayList<>();
     private List<Document> documents=new ArrayList<>();
     private List<Image> images= new ArrayList<>();
-    public String getBreed(){
-        return this.breed;
-    }
-    public void setBreed(String breed){
-        this.breed=breed;
-    }
 }

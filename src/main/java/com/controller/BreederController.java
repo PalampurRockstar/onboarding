@@ -27,6 +27,11 @@ public class BreederController {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
+    @GetMapping("/{id}/image")
+    public ResponseEntity<?> findImagesByBreederId(@PathVariable String id) {
+        return ResponseEntity.ok().body(service.findImagesByBreederId(id));
+    }
+
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Breeder Breeder) {
         return ResponseEntity.ok().body(service.save(Breeder));

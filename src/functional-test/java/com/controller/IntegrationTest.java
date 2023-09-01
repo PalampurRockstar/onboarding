@@ -4,6 +4,7 @@ import com.AppStart;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.model.dto.BreederDto;
 import com.model.dto.PetDto;
 import com.model.table.*;
 import lombok.var;
@@ -85,6 +86,8 @@ public class IntegrationTest {
         assertNotNull(actualLocation.getId());
 
 
+
+
         //when
         Breeder expectedBreeder= createBreeder();
         expectedBreeder.setLocation(actualLocation);
@@ -96,6 +99,28 @@ public class IntegrationTest {
         //verify
         assertThat(responseBreeder.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertNotNull(actualBreeder.getId());
+
+        //when
+        Image expectedImage0= createImage();
+        expectedImage0.setBreeder(actualBreeder);
+        expectedImage0.setIsProfilePicture(true);
+
+        //trigger
+        ResponseEntity<Image> responseImage0 = restTemplate.postForEntity("/image", expectedImage0,Image.class);
+        Image actualImage0= responseImage0.getBody();
+
+        //verify
+        assertThat(responseImage0.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(actualImage0.getId());
+
+        //when
+        ResponseEntity<Image[]> breederResponse0 = restTemplate.getForEntity("/breeder/"+actualBreeder.getId()+"/image", Image[].class);
+        Image[] getbreeder1= breederResponse0.getBody();
+
+        //verify
+        assertThat(breederResponse0.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getbreeder1.length).isEqualTo(1);
+        assertThat(getbreeder1[0].getId()).isEqualTo(actualImage0.getId());
 
         //when
         Price expectedPrice= createPrice();
@@ -116,6 +141,10 @@ public class IntegrationTest {
         ResponseEntity<Pet> responsePet = restTemplate.postForEntity("/pet", expectedPet,Pet.class);
         Pet actualPet= responsePet.getBody();
 
+        //verify
+        assertThat(responsePet.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(actualPet.getId());
+
         //when
         Image expectedImage1= createImage();
         expectedImage1.setPet(actualPet);
@@ -128,10 +157,6 @@ public class IntegrationTest {
         //verify
         assertThat(responseImage1.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertNotNull(actualImage1.getId());
-
-        //verify
-        assertThat(responsePet.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertNotNull(actualPet.getId());
 
         //when
         Document expectedDocument= createDocument();
@@ -172,7 +197,7 @@ public class IntegrationTest {
         //when
         ResponseEntity<PetDto> petResponse = restTemplate.getForEntity("/pet/"+actualPet.getId(), PetDto.class);
         PetDto getPetDto= petResponse.getBody();
-        Pet getPet= petMapperInstance.petDtoToPet(getPetDto);
+        Pet getPet= petMapperInstance.petDtoToPetWithGEtterSetter(getPetDto);
 
         //verify
         assertThat(petResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -182,43 +207,68 @@ public class IntegrationTest {
         //when
         ResponseEntity<Review> reviewResponse2 = restTemplate.getForEntity("/review/"+actualReview2.getId(), Review.class);
         Review getReview2= reviewResponse2.getBody();
+
+        assertThat(reviewResponse2.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(getReview2.getBreeder().getId()).isEqualTo(actualBreeder.getId());
 
         //when
         ResponseEntity<Review> reviewResponse1 = restTemplate.getForEntity("/review/"+actualReview1.getId(), Review.class);
         Review getReview1= reviewResponse1.getBody();
+
+        assertThat(reviewResponse1.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(getReview1.getPet().getId()).isEqualTo(getPet.getId());
 
         //when
         ResponseEntity<Document> documentResponse = restTemplate.getForEntity("/document/"+actualDocument.getId(), Document.class);
         Document getDocument= documentResponse.getBody();
+
+        assertThat(documentResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(getDocument.getPet().getId()).isEqualTo(getPet.getId());
 
         //when
         ResponseEntity<Image> imageResponse = restTemplate.getForEntity("/image/"+actualImage1.getId(), Image.class);
         Image getImage= imageResponse.getBody();
+
+        assertThat(imageResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(getImage.getPet().getId()).isEqualTo(getPet.getId());
 
         ResponseEntity<Review[]> reviewListResponse = restTemplate.getForEntity("/pet/"+actualPet.getId()+"/review", Review[].class);
         Review[] reviewList= reviewListResponse.getBody();
+
+        assertThat(reviewListResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(reviewList.length).isEqualTo(1);
         assertTrue(reviewList[0].getId().equals(actualReview1.getId()));
 
 
         ResponseEntity<Document[]> documentListResponse = restTemplate.getForEntity("/pet/"+actualPet.getId()+"/document", Document[].class);
         Document[] documentList= documentListResponse.getBody();
+
+        assertThat(documentListResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(documentList.length).isEqualTo(1);
         assertTrue(documentList[0].getId().equals(actualDocument.getId()));
 
         ResponseEntity<Image[]> imageListResponse = restTemplate.getForEntity("/pet/"+actualPet.getId()+"/image", Image[].class);
         Image[] imageList= imageListResponse.getBody();
+
+        assertThat(imageListResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(imageList.length).isEqualTo(1);
         assertTrue(imageList[0].getId().equals(actualImage1.getId()));
 
         ResponseEntity<Breeder> breederListResponse = restTemplate.getForEntity("/pet/"+actualPet.getId()+"/breeder", Breeder.class);
         Breeder breederList= breederListResponse.getBody();
+
+        assertThat(breederListResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertNotNull(breederList);
         assertTrue(breederList.getId().equals(actualBreeder.getId()));
+
+        ResponseEntity<BreederDto> breederResponse = restTemplate.getForEntity("/breeder/"+actualBreeder.getId(), BreederDto.class);
+        BreederDto getBreeder= breederResponse.getBody();
+
+        System.out.println("getBreeder: "+mapper.writeValueAsString(getBreeder));
+        assertNotNull(breederResponse);
+        assertThat(breederResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertTrue(getBreeder.getId().equals(actualBreeder.getId()));
+        assertTrue(getBreeder.getProfilePicture().getId().equals(actualImage0.getId()));
 
     }
 

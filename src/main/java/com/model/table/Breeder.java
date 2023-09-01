@@ -24,9 +24,9 @@ public class Breeder {
 	@Id @GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id;
-	public String name;
-	public String code;
-	public Integer rating;
+	private String name;
+	private String code;
+	private Integer rating;
 
 	@JsonIgnoreProperties("breeder")
 	@OneToMany(mappedBy = "breeder", orphanRemoval = true, cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
@@ -42,4 +42,9 @@ public class Breeder {
 	@OneToMany(cascade = CascadeType.MERGE,fetch =FetchType.LAZY )
 	@JoinColumn(name = "breeder_id")
 	private List<Review> reviews;
+
+	@JsonIgnore
+	@OneToMany(cascade = {CascadeType.MERGE},fetch=FetchType.LAZY)
+	@JoinColumn(name = "breeder_id")
+	private List<Image> images= new ArrayList<>();
 }

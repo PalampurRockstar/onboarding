@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 import static com.model.mapper.PetMapper.petMapperInstance;
 
@@ -42,7 +43,7 @@ public class PetServiceImpl implements PetService {
     @Override
     public PetDto findById(String id) {
         return petRepo.findById(id)
-                .map(petMapperInstance::petToPetDto)
+                .map(petMapperInstance::petToPetDtoWithGetterSetter)
                 .map(p->{
                     imageRepo.findDPImageHavingPetId(p.getId()).ifPresent(p::setProfilePicture);
                     return p;
@@ -52,8 +53,12 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public Pet save(Pet pet) {
-        Breeder breeder=breederRepo.findById(pet.getBreeder().getId())  .orElseThrow(() -> new EntityNotFoundException("Breeder not found with id: " + pet.getBreeder().getId()));
-        breeder.getPets().add(pet);
+        Optional.of(pet)
+                .map(Pet::getBreeder)
+                .map(Breeder::getId).flatMap(id -> breederRepo
+                        .findById(id)).ifPresent(b -> b.getPets()
+                        .add(pet));
+
         return petRepo.save(pet);
     }
     @Override

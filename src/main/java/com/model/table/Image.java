@@ -23,8 +23,12 @@ public class Image {
     private String path;
     private String cdn;
     private Boolean isProfilePicture;
-    @ManyToOne(fetch=FetchType.LAZY)
+
+    @ManyToOne(fetch=FetchType.LAZY,optional=true)
     private Pet pet;
+
+    @ManyToOne(fetch=FetchType.LAZY,optional=true)
+    private Breeder breeder;
 
 
 //    @JsonBackReference(value="review-pet")

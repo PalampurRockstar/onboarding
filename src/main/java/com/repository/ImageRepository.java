@@ -22,4 +22,10 @@ public interface ImageRepository extends JpaRepository<Image, String>, JpaSpecif
 
     @Query("select i from Image i inner join i.pet p where p.id  = :petId and is_profile_picture='true'")
     Optional<Image> findDPImageHavingPetId(@Param("petId") String petId);
+
+    @Query("select i from Image i inner join i.breeder b where b.id  = :breederId and is_profile_picture='true'")
+    Optional<Image> findDPImageHavingBreederId(@Param("breederId") String breederId);
+
+    @Query("select i from Image i inner join i.breeder b where b.id  = :breederId")
+    List<Image> findImagesHavingBreederId(@Param("breederId") String breederId);
 }
