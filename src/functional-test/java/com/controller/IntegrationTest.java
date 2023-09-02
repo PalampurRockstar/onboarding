@@ -104,6 +104,8 @@ public class IntegrationTest {
         Image expectedImage0= createImage();
         expectedImage0.setBreeder(actualBreeder);
         expectedImage0.setIsProfilePicture(true);
+        expectedImage0.setFile("sourabh.jpg");
+        expectedImage0.setPath("http://localhost:8888/api/images/");
 
         //trigger
         ResponseEntity<Image> responseImage0 = restTemplate.postForEntity("/image", expectedImage0,Image.class);

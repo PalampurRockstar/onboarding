@@ -35,7 +35,7 @@ public class BreederServiceImpl implements BreederService {
     @Override
     public BreederDto findById(String id) {
         return breederRepo.findById(id)
-                .map(breederMapperInstance::breederToBreederDto).map(b->{
+                .map(breederMapperInstance::breederToBreederDtoWithGetterSetter).map(b->{
                     imageRepo.findDPImageHavingBreederId(id)
                             .ifPresent(b::setProfilePicture);
                     return b;
